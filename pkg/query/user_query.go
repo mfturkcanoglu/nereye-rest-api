@@ -1,7 +1,11 @@
 package query
 
+func UserInsertQueryWithReturn() string {
+	return UserInsertQuery() + "RETURNING id;"
+}
+
 func UserInsertQuery() string {
-	return "INSERT INTO users (username, email, phone_number, full_name, surname) VALUES ($1, $2, $3, $4, $5) RETURNING id"
+	return "INSERT INTO users (username, email, phone_number, full_name, surname) VALUES ($1, $2, $3, $4, $5)"
 }
 
 func UserSelectQuery() string {

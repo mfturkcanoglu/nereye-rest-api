@@ -64,7 +64,7 @@ func (h *CustomUserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.userRepository.CreateUser(user)
+	_, err = h.userRepository.CreateUser(user)
 
 	if err != nil {
 		msg := "Users cannot handled from db"

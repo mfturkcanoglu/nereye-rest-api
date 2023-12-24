@@ -22,6 +22,7 @@ type Customer struct {
 }
 
 type CustomerGet struct {
+	ID           string `json:"customer_id"`
 	CompanyName  string `json:"company_name"`
 	CustomerType string `json:"customer_type"`
 	Username     string `json:"username"`

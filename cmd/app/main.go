@@ -22,10 +22,12 @@ func main() {
 		db     *sql.DB              = store.InitializeDatabase()
 		router *server.CustomRouter = server.NewCustomRouter(logger)
 
-		userRepository     *repository.CustomUserRepository     = repository.NewUserRepository(logger, db)
-		customerRepository *repository.CustomCustomerRepository = repository.NewCustomerRepository(logger, db)
-		_                  *handler.CustomUserHandler           = handler.NewCustomUserHandler(logger, userRepository, router)
-		_                  *handler.CustomCustomerHandler       = handler.NewCustomCustomerHandler(logger, customerRepository, router)
+		userRepository       *repository.CustomUserRepository       = repository.NewUserRepository(logger, db)
+		customerRepository   *repository.CustomCustomerRepository   = repository.NewCustomerRepository(logger, db)
+		restaurantRepository *repository.CustomRestaurantRepository = repository.NewRestaurantRepository(logger, db)
+		_                    *handler.CustomUserHandler             = handler.NewCustomUserHandler(logger, userRepository, router)
+		_                    *handler.CustomCustomerHandler         = handler.NewCustomCustomerHandler(logger, customerRepository, router)
+		_                    *handler.CustomRestaurantHandler       = handler.NewCustomRestaurantHandler(logger, restaurantRepository, router)
 	)
 
 	defer store.Close()

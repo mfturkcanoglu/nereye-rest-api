@@ -26,16 +26,19 @@ func NewUserRepository(logger *log.Logger, db *sql.DB) *CustomUserRepository {
 	return repo
 }
 
-func (repo *CustomUserRepository) CreateUser(userCreate *model.UserCreate) error {
-	_, err := repo.db.Exec(
+func (repo *CustomUserRepository) CreateUser(userCreate *model.UserCreate) (string, error) {
+	var id string
+
+	err := repo.db.QueryRow(
 		query.UserInsertQuery(),
 		userCreate.Username, userCreate.Email, userCreate.PhoneNumber, userCreate.FullName, userCreate.Surname,
-	)
+	).Scan(&id)
+
 	if err != nil {
 		repo.logger.Println(err)
-		return err
 	}
-	return nil
+
+	return id, err
 }
 
 func (repo *CustomUserRepository) GetAll() ([]*model.UserGet, error) {

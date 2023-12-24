@@ -7,6 +7,7 @@ func CustomerInsertQuery() string {
 func CustomerUserSelectQuery() string {
 	return `
 		SELECT
+		c.id,
 		c.company_name,
 		c.customer_type,
 		u.username,

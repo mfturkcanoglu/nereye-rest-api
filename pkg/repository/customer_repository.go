@@ -10,7 +10,7 @@ import (
 
 type CustomerRepository interface {
 	CreateCustomer(customerCreate *model.CustomerCreate) error
-	GetAll() ([]*model.CustomerCreate, error)
+	GetAll() ([]*model.CustomerGet, error)
 }
 
 type CustomCustomerRepository struct {
@@ -40,6 +40,7 @@ func (repo *CustomCustomerRepository) GetAll() ([]*model.CustomerGet, error) {
 	for rows.Next() {
 		customer := &model.CustomerGet{}
 		err := rows.Scan(
+			&customer.ID,
 			&customer.CompanyName,
 			&customer.CustomerType,
 			&customer.Username,
@@ -62,7 +63,7 @@ func (repo *CustomCustomerRepository) CreateCustomer(customerCreate *model.Custo
 	username := customerCreate.CreateRandomCustomerUsername()
 	var userId string
 	err := repo.db.QueryRow(
-		query.UserInsertQuery(),
+		query.UserInsertQueryWithReturn(),
 		username, customerCreate.Email, customerCreate.PhoneNumber, customerCreate.FullName, customerCreate.Surname,
 	).Scan(&userId)
 
