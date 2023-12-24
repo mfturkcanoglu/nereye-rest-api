@@ -84,8 +84,8 @@ func (h *CustomRestaurantHandler) CreateRestaurant(w http.ResponseWriter, r *htt
 }
 
 func (h *CustomRestaurantHandler) RegisterRoutes(router *server.CustomRouter) {
-	router.Router.Route("/restaurant", func(r chi.Router) {
+	router.Router.Route("/api/v1/restaurant", func(r chi.Router) {
 		r.Get("/", h.GetAll)
-		r.Post("/add", h.CreateRestaurant)
+		r.Post("/", h.CreateRestaurant)
 	})
 }

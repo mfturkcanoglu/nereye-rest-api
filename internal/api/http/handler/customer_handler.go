@@ -82,8 +82,8 @@ func (h *CustomCustomerHandler) CreateCustomer(w http.ResponseWriter, r *http.Re
 }
 
 func (h *CustomCustomerHandler) RegisterRoutes(router *server.CustomRouter) {
-	router.Router.Route("/customer", func(r chi.Router) {
+	router.Router.Route("/api/v1/customer", func(r chi.Router) {
 		r.Get("/", h.GetAllCustomer)
-		r.Post("/add", h.CreateCustomer)
+		r.Post("/", h.CreateCustomer)
 	})
 }

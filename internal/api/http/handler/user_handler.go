@@ -81,8 +81,8 @@ func (h *CustomUserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *CustomUserHandler) RegisterRoutes(router *server.CustomRouter) {
-	router.Router.Route("/user", func(r chi.Router) {
+	router.Router.Route("/api/v1/user", func(r chi.Router) {
 		r.Get("/", h.GetAllUsers)
-		r.Post("/add", h.CreateUser)
+		r.Post("/", h.CreateUser)
 	})
 }
