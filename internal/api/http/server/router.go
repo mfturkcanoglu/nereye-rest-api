@@ -2,7 +2,7 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -10,31 +10,21 @@ import (
 	m "github.com/mfturkcan/nereye-rest-api/internal/api/http/middleware"
 )
 
+var (
+	logger *log.Logger = log.Default()
+)
 
-func Setup() *chi.Mux{
-	r := chi.NewRouter()
 
-	r.Use(middleware.Logger)
-	r.Use(m.ContentTypeApplicationJsonMiddleware)
+func (s *Server) Setup(){
+	s.router.Use(middleware.Logger)
+	s.router.Use(m.ContentTypeApplicationJsonMiddleware)
 
-	loadRoutes(r)
-	loadCustomRoutes(r)
-
-	return r
+	loadRoutes(s.router)
+	loadCustomRoutes(s.router)
 }
 
 func loadRoutes(router *chi.Mux){
-	router.Get("/", func(w http.ResponseWriter, r *http.Request){
-		w.WriteHeader(http.StatusOK)
-		//w.Header().Add("Content-Type", "application/json")
-		dict :=map[interface{}]interface{}{
-		 "test":"api",
-		}
-		err := json.NewEncoder(w).Encode(dict)
-		if err != nil {
-			fmt.Println("Error", err)
-		}
-	})
+	
 }
 
 func loadCustomRoutes(router *chi.Mux){
