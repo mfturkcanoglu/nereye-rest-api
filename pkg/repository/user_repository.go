@@ -10,22 +10,23 @@ import (
 type UserRepository interface {
 	CreateUser(userCreate *model.UserCreate) error
 	GetAll() ([]*model.UserGet, error)
+	NewUserRepository(logger *log.Logger, db *sql.DB) *CustomUserRepository
 }
 
-type userRepository struct {
+type CustomUserRepository struct {
 	logger *log.Logger
 	db     *sql.DB
 }
 
-func NewUserRepository(logger *log.Logger, db *sql.DB) *userRepository {
-	repo := &userRepository{
+func NewUserRepository(logger *log.Logger, db *sql.DB) *CustomUserRepository {
+	repo := &CustomUserRepository{
 		logger: logger,
 		db:     db,
 	}
 	return repo
 }
 
-func (repo *userRepository) CreateUser(userCreate *model.UserCreate) error {
+func (repo *CustomUserRepository) CreateUser(userCreate *model.UserCreate) error {
 	_, err := repo.db.Exec(
 		"INSERT INTO users (username, email, phone_number, full_name, surname) VALUES ($1, $2, $3, $4, $5)",
 		userCreate.Username, userCreate.Email, userCreate.PhoneNumber, userCreate.FullName, userCreate.Surname,
@@ -36,7 +37,7 @@ func (repo *userRepository) CreateUser(userCreate *model.UserCreate) error {
 	return nil
 }
 
-func (repo *userRepository) GetAll() ([]*model.UserGet, error) {
+func (repo *CustomUserRepository) GetAll() ([]*model.UserGet, error) {
 	rows, err := repo.db.Query(`
 		SELECT
 		u.username,

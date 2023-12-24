@@ -5,17 +5,33 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/errors"
+	"github.com/mfturkcan/nereye-rest-api/internal/api/http/server"
 	"github.com/mfturkcan/nereye-rest-api/pkg/model"
 	"github.com/mfturkcan/nereye-rest-api/pkg/repository"
 )
 
-type UserHandler struct {
-	userRepository repository.UserRepository
+type UserHandler interface {
+	GetAllUsers(w http.ResponseWriter, r *http.Request)
+	CreateUser(w http.ResponseWriter, r *http.Request)
+}
+
+type CustomUserHandler struct {
+	userRepository *repository.CustomUserRepository
 	logger         *log.Logger
 }
 
-func (h *UserHandler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
+func NewCustomerUserHandler(logger *log.Logger, userRepository *repository.CustomUserRepository, router *server.CustomRouter) *CustomUserHandler {
+	handler := &CustomUserHandler{
+		logger:         logger,
+		userRepository: userRepository,
+	}
+	handler.RegisterRoutes(router)
+	return handler
+}
+
+func (h *CustomUserHandler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	res, err := h.userRepository.GetAll()
 
 	if err != nil {
@@ -33,7 +49,7 @@ func (h *UserHandler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(&res)
 }
 
-func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
+func (h *CustomUserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	user := &model.UserCreate{}
 	err := json.NewDecoder(r.Body).Decode(&user)
 
@@ -62,4 +78,11 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
+}
+
+func (h *CustomUserHandler) RegisterRoutes(router *server.CustomRouter) {
+	router.Router.Route("/user", func(r chi.Router) {
+		r.Get("/", h.GetAllUsers)
+		r.Post("/add", h.CreateUser)
+	})
 }

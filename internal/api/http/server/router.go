@@ -11,20 +11,27 @@ import (
 	m "github.com/mfturkcan/nereye-rest-api/internal/api/http/middleware"
 )
 
-var (
-	logger *log.Logger = log.Default()
-)
-
-func (s *Server) Setup() {
-	s.router.Use(middleware.Logger)
-	s.router.Use(m.ContentTypeApplicationJsonMiddleware)
-
-	loadRoutes(s.router)
-	loadCustomRoutes(s.router)
+type CustomRouter struct {
+	logger *log.Logger
+	Router *chi.Mux
 }
 
-func loadRoutes(router *chi.Mux) {
+func NewCustomRouter(logger *log.Logger) *CustomRouter {
+	customRouter := &CustomRouter{
+		logger: logger,
+		Router: chi.NewRouter(),
+	}
 
+	customRouter.Setup()
+
+	return customRouter
+}
+
+func (router *CustomRouter) Setup() {
+	router.Router.Use(middleware.Logger)
+	router.Router.Use(m.ContentTypeApplicationJsonMiddleware)
+
+	loadCustomRoutes(router.Router)
 }
 
 func loadCustomRoutes(router *chi.Mux) {

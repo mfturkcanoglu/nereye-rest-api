@@ -5,30 +5,27 @@ import (
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/go-chi/chi/v5"
 )
 
 type Server struct {
-	router *chi.Mux
+	router *CustomRouter
 	logger *log.Logger
 	ctx    *context.Context
 }
 
-func NewServer(log *log.Logger, ctx *context.Context) *Server {
+func NewServer(log *log.Logger, ctx *context.Context, router *CustomRouter) *Server {
 	s := &Server{
-		router: chi.NewRouter(),
-		logger: logger,
+		router: router,
+		logger: log,
 		ctx:    ctx,
 	}
-	s.Setup()
 	return s
 }
 
 func (s *Server) ListenAndServe() {
 	httpServer := http.Server{
 		Addr:         ":3000",
-		Handler:      s.router,
+		Handler:      s.router.Router,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
 		IdleTimeout:  2 * time.Minute,

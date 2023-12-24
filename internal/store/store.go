@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"log"
+
+	_ "github.com/lib/pq"
 )
 
 type Store struct {
@@ -35,7 +37,7 @@ func (store *Store) Close() {
 }
 
 func (store *Store) createConnection() {
-	const connectionString = "postgres://mfturkcan:@localhost:5432/nereyedb"
+	const connectionString = "postgres://mfturkcan:@localhost:5432/nereyedb?sslmode=disable"
 
 	db, err := sql.Open("postgres", connectionString)
 
@@ -48,6 +50,7 @@ func (store *Store) createConnection() {
 
 	if err != nil {
 		store.logger.Println("Error occured reaching db")
+		store.logger.Println(err)
 	}
 
 	store.DB = db
