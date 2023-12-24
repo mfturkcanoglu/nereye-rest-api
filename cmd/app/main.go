@@ -12,21 +12,22 @@ import (
 )
 
 var (
-	ctx            context.Context
-	logger         *log.Logger          = log.Default()
-	router         *server.CustomRouter = server.NewCustomRouter(logger)
-	db             *sql.DB
-	userRepository *repository.CustomUserRepository = repository.NewUserRepository(logger, db)
-	userHandler    *handler.CustomUserHandler       = handler.NewCustomerUserHandler(logger, userRepository, router)
+	ctx    context.Context = context.Background()
+	logger *log.Logger     = log.Default()
 )
 
 func main() {
-	ctx = context.Background()
+	var (
+		store          *store.Store                     = store.NewStore(logger, &ctx)
+		db             *sql.DB                          = store.InitializeDatabase()
+		router         *server.CustomRouter             = server.NewCustomRouter(logger)
+		userRepository *repository.CustomUserRepository = repository.NewUserRepository(logger, db)
+		_              *handler.CustomUserHandler       = handler.NewCustomerUserHandler(logger, userRepository, router)
+	)
+
+	defer store.Close()
 
 	server := server.NewServer(logger, &ctx, router)
-
-	store := store.NewStore(logger, &ctx)
-	db = store.InitializeDatabase()
 
 	server.ListenAndServe()
 }

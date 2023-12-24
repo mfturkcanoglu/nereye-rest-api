@@ -32,6 +32,7 @@ func (repo *CustomUserRepository) CreateUser(userCreate *model.UserCreate) error
 		userCreate.Username, userCreate.Email, userCreate.PhoneNumber, userCreate.FullName, userCreate.Surname,
 	)
 	if err != nil {
+		repo.logger.Println(err)
 		return err
 	}
 	return nil
@@ -41,15 +42,16 @@ func (repo *CustomUserRepository) GetAll() ([]*model.UserGet, error) {
 	rows, err := repo.db.Query(`
 		SELECT
 		u.username,
-		u.phone,
+		u.phone_number,
 		u.email,
 		u.full_name,
-		u.last_name
+		u.surname
 		from users u
 		order by u.updated_at desc
 	`)
 
 	if err != nil {
+		repo.logger.Println(err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -66,6 +68,7 @@ func (repo *CustomUserRepository) GetAll() ([]*model.UserGet, error) {
 			&user.Surname)
 
 		if err != nil {
+			repo.logger.Println(err)
 			return nil, err
 		}
 		users = append(users, user)
