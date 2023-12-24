@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/mfturkcan/nereye-rest-api/internal/api/http/errors"
 	m "github.com/mfturkcan/nereye-rest-api/internal/api/http/middleware"
 )
 
@@ -14,8 +15,7 @@ var (
 	logger *log.Logger = log.Default()
 )
 
-
-func (s *Server) Setup(){
+func (s *Server) Setup() {
 	s.router.Use(middleware.Logger)
 	s.router.Use(m.ContentTypeApplicationJsonMiddleware)
 
@@ -23,29 +23,25 @@ func (s *Server) Setup(){
 	loadCustomRoutes(s.router)
 }
 
-func loadRoutes(router *chi.Mux){
-	
+func loadRoutes(router *chi.Mux) {
+
 }
 
-func loadCustomRoutes(router *chi.Mux){
-	type customRouteResponse struct {
-		Message string `json:"message"`
-		Status int `json:"status"`
-	}
-
-	router.NotFound(func(w http.ResponseWriter, r *http.Request){
+func loadCustomRoutes(router *chi.Mux) {
+	router.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		_ = json.NewEncoder(w).Encode(&customRouteResponse{
-			Message:"Request not found" ,
-			Status: http.StatusNotFound,
+		_ = json.NewEncoder(w).Encode(&errors.ErrorResponse{
+			Message: "Request not found",
+			Status:  http.StatusNotFound,
+			Detail:  "No such a request exists on path",
 		})
 	})
 
-	router.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request){
+	router.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		_ = json.NewEncoder(w).Encode(&customRouteResponse{
-			Message:"Method is not valid" ,
-			Status: http.StatusMethodNotAllowed,
+		_ = json.NewEncoder(w).Encode(&errors.ErrorResponse{
+			Message: "Method is not valid",
+			Status:  http.StatusMethodNotAllowed,
 		})
 	})
 }

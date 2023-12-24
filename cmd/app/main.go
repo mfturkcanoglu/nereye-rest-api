@@ -1,22 +1,25 @@
 package main
 
 import (
+	"context"
+	"database/sql"
 	"log"
 
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/server"
 	"github.com/mfturkcan/nereye-rest-api/internal/store"
-	"gorm.io/gorm"
 )
 
 var (
-	logger *log.Logger  = log.Default()
-	db *gorm.DB
+	ctx    context.Context
+	logger *log.Logger = log.Default()
+	db     *sql.DB
 )
 
-func main(){
-	server := server.NewServer(logger)
+func main() {
+	ctx = context.Background()
+	server := server.NewServer(logger, &ctx)
 
-	store := store.NewStore(logger)
+	store := store.NewStore(logger, &ctx)
 	db = store.InitializeDatabase()
 
 	server.ListenAndServe()

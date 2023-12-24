@@ -1,52 +1,62 @@
 package store
 
 import (
+	"context"
+	"database/sql"
 	"log"
-
-	"github.com/mfturkcan/nereye-rest-api/pkg/model"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
-type Store struct{
-	DB *gorm.DB
+type Store struct {
+	DB     *sql.DB
 	logger *log.Logger
+	ctx    *context.Context
 }
 
-func NewStore(logger *log.Logger) *Store {
+func NewStore(logger *log.Logger, ctx *context.Context) *Store {
 	store := &Store{
-		DB: nil,
+		DB:     nil,
 		logger: logger,
+		ctx:    ctx,
 	}
 	return store
 }
 
-func (store *Store) InitializeDatabase() *gorm.DB{
+func (store *Store) InitializeDatabase() *sql.DB {
 	store.createConnection()
 	store.autoMigrate()
 	return store.DB
 }
 
-func (store *Store) Close(){
+func (store *Store) Close() {
+	err := store.DB.Close()
+	if err != nil {
+		store.logger.Panicln("Error occured while closing connection")
+	}
 }
 
-func (store *Store) createConnection(){
+func (store *Store) createConnection() {
 	const connectionString = "postgres://mfturkcan:@localhost:5432/nereyedb"
 
-	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
+	db, err := sql.Open("postgres", connectionString)
 
 	if err != nil {
-		store.logger.Println("Error occured while connecting db")
+		store.logger.Println("Error creating instance of db")
 		store.logger.Fatalln(err)
+	}
+
+	err = db.PingContext(*store.ctx)
+
+	if err != nil {
+		store.logger.Println("Error occured reaching db")
 	}
 
 	store.DB = db
 }
 
-func (store *Store) autoMigrate(){
-	err := store.DB.AutoMigrate(&model.Todo{})
-	
-	if err != nil {
-		store.logger.Panicln("Error occured while creating migrations")
-	}
+func (store *Store) autoMigrate() {
+	//err := store.DB..AutoMigrate(&model.Todo{})
+
+	// if err != nil {
+	// 	store.logger.Panicln("Error occured while creating migrations")
+	// }
 }

@@ -1,10 +1,10 @@
 package repository
 
 import (
+	"database/sql"
 	"log"
 
 	"github.com/mfturkcan/nereye-rest-api/pkg/model"
-	"gorm.io/gorm"
 )
 
 type TodoRepository interface{
@@ -13,10 +13,10 @@ type TodoRepository interface{
 
 type todoRepository struct {
 	logger *log.Logger
-	db *gorm.DB
+	db *sql.DB
 }
 
-func NewTodoRepository(logger *log.Logger, db *gorm.DB) *todoRepository {
+func NewTodoRepository(logger *log.Logger, db *sql.DB) *todoRepository {
 	repo := &todoRepository{
 		logger: logger,
 		db: db,
