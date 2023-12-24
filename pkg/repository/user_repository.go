@@ -10,7 +10,6 @@ import (
 type UserRepository interface {
 	CreateUser(userCreate *model.UserCreate) error
 	GetAll() ([]*model.UserGet, error)
-	NewUserRepository(logger *log.Logger, db *sql.DB) *CustomUserRepository
 }
 
 type CustomUserRepository struct {

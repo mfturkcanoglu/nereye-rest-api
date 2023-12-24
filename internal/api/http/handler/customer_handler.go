@@ -12,30 +12,30 @@ import (
 	"github.com/mfturkcan/nereye-rest-api/pkg/repository"
 )
 
-type UserHandler interface {
-	GetAllUsers(w http.ResponseWriter, r *http.Request)
-	CreateUser(w http.ResponseWriter, r *http.Request)
+type CustomerHandler interface {
+	GetAllCustomer(w http.ResponseWriter, r *http.Request)
+	CreateCustomer(w http.ResponseWriter, r *http.Request)
 }
 
-type CustomUserHandler struct {
-	userRepository *repository.CustomUserRepository
-	logger         *log.Logger
+type CustomCustomerHandler struct {
+	customerRepository *repository.CustomCustomerRepository
+	logger             *log.Logger
 }
 
-func NewCustomUserHandler(logger *log.Logger, userRepository *repository.CustomUserRepository, router *server.CustomRouter) *CustomUserHandler {
-	handler := &CustomUserHandler{
-		logger:         logger,
-		userRepository: userRepository,
+func NewCustomCustomerHandler(logger *log.Logger, customerRepository *repository.CustomCustomerRepository, router *server.CustomRouter) *CustomCustomerHandler {
+	handler := &CustomCustomerHandler{
+		logger:             logger,
+		customerRepository: customerRepository,
 	}
 	handler.RegisterRoutes(router)
 	return handler
 }
 
-func (h *CustomUserHandler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
-	res, err := h.userRepository.GetAll()
+func (h *CustomCustomerHandler) GetAllCustomer(w http.ResponseWriter, r *http.Request) {
+	res, err := h.customerRepository.GetAll()
 
 	if err != nil {
-		msg := "Users cannot handled from db"
+		msg := "Customers cannot handled from db"
 		h.logger.Println(msg)
 		w.WriteHeader(http.StatusInternalServerError)
 		_ = json.NewEncoder(w).Encode(&errors.ErrorResponse{
@@ -49,9 +49,9 @@ func (h *CustomUserHandler) GetAllUsers(w http.ResponseWriter, r *http.Request) 
 	_ = json.NewEncoder(w).Encode(&res)
 }
 
-func (h *CustomUserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
-	user := &model.UserCreate{}
-	err := json.NewDecoder(r.Body).Decode(&user)
+func (h *CustomCustomerHandler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
+	customer := &model.CustomerCreate{}
+	err := json.NewDecoder(r.Body).Decode(&customer)
 
 	if err != nil {
 		msg := "Schema is not correct"
@@ -64,15 +64,16 @@ func (h *CustomUserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.userRepository.CreateUser(user)
+	err = h.customerRepository.CreateCustomer(customer)
 
 	if err != nil {
-		msg := "Users cannot handled from db"
+		msg := "Customers cannot handled from db"
 		h.logger.Println(msg)
 		w.WriteHeader(http.StatusInternalServerError)
 		_ = json.NewEncoder(w).Encode(&errors.ErrorResponse{
 			Message: msg,
 			Status:  http.StatusInternalServerError,
+			Detail:  err.Error(),
 		})
 		return
 	}
@@ -80,9 +81,8 @@ func (h *CustomUserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func (h *CustomUserHandler) RegisterRoutes(router *server.CustomRouter) {
-	router.Router.Route("/user", func(r chi.Router) {
-		r.Get("/", h.GetAllUsers)
-		r.Post("/add", h.CreateUser)
+func (h *CustomCustomerHandler) RegisterRoutes(router *server.CustomRouter) {
+	router.Router.Route("/customer", func(r chi.Router) {
+		r.Post("/add", h.CreateCustomer)
 	})
 }

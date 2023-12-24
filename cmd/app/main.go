@@ -18,11 +18,14 @@ var (
 
 func main() {
 	var (
-		store          *store.Store                     = store.NewStore(logger, &ctx)
-		db             *sql.DB                          = store.InitializeDatabase()
-		router         *server.CustomRouter             = server.NewCustomRouter(logger)
-		userRepository *repository.CustomUserRepository = repository.NewUserRepository(logger, db)
-		_              *handler.CustomUserHandler       = handler.NewCustomerUserHandler(logger, userRepository, router)
+		store  *store.Store         = store.NewStore(logger, &ctx)
+		db     *sql.DB              = store.InitializeDatabase()
+		router *server.CustomRouter = server.NewCustomRouter(logger)
+
+		userRepository     *repository.CustomUserRepository     = repository.NewUserRepository(logger, db)
+		customerRepository *repository.CustomCustomerRepository = repository.NewCustomerRepository(logger, db)
+		_                  *handler.CustomUserHandler           = handler.NewCustomUserHandler(logger, userRepository, router)
+		_                  *handler.CustomCustomerHandler       = handler.NewCustomCustomerHandler(logger, customerRepository, router)
 	)
 
 	defer store.Close()
