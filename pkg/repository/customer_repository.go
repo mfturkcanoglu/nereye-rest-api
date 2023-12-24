@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/mfturkcan/nereye-rest-api/pkg/model"
+	"github.com/mfturkcan/nereye-rest-api/pkg/query"
 )
 
 type CustomerRepository interface {
@@ -25,17 +26,8 @@ func NewCustomerRepository(logger *log.Logger, db *sql.DB) *CustomCustomerReposi
 	return repo
 }
 
-func (repo *CustomCustomerRepository) GetAll() ([]*model.UserGet, error) {
-	rows, err := repo.db.Query(`
-		SELECT
-		u.username,
-		u.phone_number,
-		u.email,
-		u.full_name,
-		u.surname
-		from users u
-		order by u.updated_at desc
-	`)
+func (repo *CustomCustomerRepository) GetAll() ([]*model.CustomerGet, error) {
+	rows, err := repo.db.Query(query.CustomerUserSelectQuery())
 
 	if err != nil {
 		repo.logger.Println(err)
@@ -43,31 +35,34 @@ func (repo *CustomCustomerRepository) GetAll() ([]*model.UserGet, error) {
 	}
 	defer rows.Close()
 
-	users := []*model.UserGet{}
+	customers := []*model.CustomerGet{}
 
 	for rows.Next() {
-		user := &model.UserGet{}
+		customer := &model.CustomerGet{}
 		err := rows.Scan(
-			&user.Username,
-			&user.PhoneNumber,
-			&user.Email,
-			&user.FullName,
-			&user.Surname)
+			&customer.CompanyName,
+			&customer.CustomerType,
+			&customer.Username,
+			&customer.PhoneNumber,
+			&customer.Email,
+			&customer.FullName,
+			&customer.Surname,
+		)
 
 		if err != nil {
 			repo.logger.Println(err)
 			return nil, err
 		}
-		users = append(users, user)
+		customers = append(customers, customer)
 	}
-	return users, nil
+	return customers, nil
 }
 
 func (repo *CustomCustomerRepository) CreateCustomer(customerCreate *model.CustomerCreate) error {
 	username := customerCreate.CreateRandomCustomerUsername()
 	var userId string
 	err := repo.db.QueryRow(
-		"INSERT INTO users (username, email, phone_number, full_name, surname) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+		query.UserInsertQuery(),
 		username, customerCreate.Email, customerCreate.PhoneNumber, customerCreate.FullName, customerCreate.Surname,
 	).Scan(&userId)
 
@@ -80,7 +75,7 @@ func (repo *CustomCustomerRepository) CreateCustomer(customerCreate *model.Custo
 	}
 
 	_, err = repo.db.Exec(
-		"INSERT INTO customer (company_name, customer_type, user_id) VALUES ($1, $2, $3)",
+		query.CustomerInsertQuery(),
 		customerCreate.CompanyName, customerCreate.CustomerType, userId,
 	)
 

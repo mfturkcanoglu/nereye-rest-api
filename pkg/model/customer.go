@@ -21,6 +21,16 @@ type Customer struct {
 	Deleted      bool
 }
 
+type CustomerGet struct {
+	CompanyName  string `json:"company_name"`
+	CustomerType string `json:"customer_type"`
+	Username     string `json:"username"`
+	Email        string `json:"email"`
+	PhoneNumber  string `json:"phone_number"`
+	FullName     string `json:"full_name"`
+	Surname      string `json:"surname"`
+}
+
 type CustomerCreate struct {
 	CompanyName     string `json:"company_name"`
 	CustomerType    string `json:"customer_type"`

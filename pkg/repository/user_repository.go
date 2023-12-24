@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/mfturkcan/nereye-rest-api/pkg/model"
+	"github.com/mfturkcan/nereye-rest-api/pkg/query"
 )
 
 type UserRepository interface {
@@ -27,7 +28,7 @@ func NewUserRepository(logger *log.Logger, db *sql.DB) *CustomUserRepository {
 
 func (repo *CustomUserRepository) CreateUser(userCreate *model.UserCreate) error {
 	_, err := repo.db.Exec(
-		"INSERT INTO users (username, email, phone_number, full_name, surname) VALUES ($1, $2, $3, $4, $5)",
+		query.UserInsertQuery(),
 		userCreate.Username, userCreate.Email, userCreate.PhoneNumber, userCreate.FullName, userCreate.Surname,
 	)
 	if err != nil {
@@ -38,16 +39,7 @@ func (repo *CustomUserRepository) CreateUser(userCreate *model.UserCreate) error
 }
 
 func (repo *CustomUserRepository) GetAll() ([]*model.UserGet, error) {
-	rows, err := repo.db.Query(`
-		SELECT
-		u.username,
-		u.phone_number,
-		u.email,
-		u.full_name,
-		u.surname
-		from users u
-		order by u.updated_at desc
-	`)
+	rows, err := repo.db.Query(query.UserSelectQuery())
 
 	if err != nil {
 		repo.logger.Println(err)
