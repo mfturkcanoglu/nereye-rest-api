@@ -8,7 +8,7 @@ RUN go mod download
 
 WORKDIR /cmd/app
 
-RUN go build -o server .
+RUN go build -o server cmd/app/main.go
 
 EXPOSE 4000
 
