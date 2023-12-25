@@ -11,4 +11,6 @@ RUN go build cmd/app/main.go
 
 EXPOSE 4000
 
+RUN chmod +x ./
+
 CMD ["./"]
