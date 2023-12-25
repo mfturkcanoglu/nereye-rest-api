@@ -4,8 +4,8 @@ WORKDIR /
 COPY . ./
 RUN go mod download
 
-RUN go build -o /nereye-api
+RUN go build -o /cmd/app
 
 EXPOSE 4000
 
-CMD [ "/nereye-api" ]
+CMD [ "/cmd/app" ]
