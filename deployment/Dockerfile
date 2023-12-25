@@ -6,7 +6,7 @@ WORKDIR /nereye
 
 RUN go mod download
 
-RUN go build -o server cmd/app/main.go
+RUN go build -o /server cmd/app/main.go
 
 EXPOSE 4000
 
