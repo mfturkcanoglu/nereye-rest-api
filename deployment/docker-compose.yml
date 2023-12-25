@@ -1,17 +1,19 @@
-version: '3.9'
+version: "3.9"
 services:
   app:
     container_name: golang_container
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-      - DATABASE_HOST=${DB_HOST}
-      - DATABASE_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DRIVER=${DB_DRIVER}
+      - APP_PORT=${APP_PORT}
     tty: true
     build: .
     ports:
-      - 3000:3000
+      - 4000:4000
     restart: always
     volumes:
       - .:/app
@@ -29,6 +31,6 @@ services:
       - POSTGRES_DB=${DB_NAME}
       - DATABASE_HOST=${DB_HOST}
     ports:
-      - '5432:5432'
+      - "5432:5432"
     networks:
       - nereye

@@ -30,7 +30,13 @@ func (repo *CustomRestaurantRepository) CreateRestaurant(create *model.Restauran
 	var addressId string
 	err := repo.db.QueryRow(
 		query.CreateAddressQueryReturnId(),
-		create.Country, create.City, create.County, create.District, create.FullAddress, create.Latitude, create.Longitude,
+		create.Country,
+		create.City,
+		create.County,
+		create.District,
+		create.FullAddress,
+		create.Latitude,
+		create.Longitude,
 	).Scan(&addressId)
 
 	if err != nil {
@@ -43,7 +49,19 @@ func (repo *CustomRestaurantRepository) CreateRestaurant(create *model.Restauran
 
 	_, err = repo.db.Exec(
 		query.Restaurant_InsertQuery(),
-		create.PhotoUrl, create.SignName, addressId, create.CustomerId,
+		create.PhotoUrl,
+		create.SignName,
+		create.AboutUs,
+		create.ExtraInfo,
+		create.PhoneNumber,
+		create.WorkplacePhoneNumber,
+		create.IsAvailable,
+		create.AvailableAtStart,
+		create.AvailableAtEnd,
+		create.WeekendAvailableAtStart,
+		create.WeekendAvailableAtEnd,
+		addressId,
+		create.CustomerId,
 	)
 
 	if err != nil {
@@ -77,6 +95,15 @@ func (repo *CustomRestaurantRepository) getRestaurantsFromRows(rows *sql.Rows) (
 		err := rows.Scan(
 			&restaurant.PhotoUrl,
 			&restaurant.SignName,
+			&restaurant.AboutUs,
+			&restaurant.ExtraInfo,
+			&restaurant.PhoneNumber,
+			&restaurant.WorkplacePhoneNumber,
+			&restaurant.IsAvailable,
+			&restaurant.AvailableAtStart,
+			&restaurant.AvailableAtEnd,
+			&restaurant.WeekendAvailableAtStart,
+			&restaurant.WeekendAvailableAtEnd,
 			&restaurant.Country,
 			&restaurant.City,
 			&restaurant.County,

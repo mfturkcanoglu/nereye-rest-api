@@ -7,6 +7,7 @@ import (
 
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/handler"
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/server"
+	"github.com/mfturkcan/nereye-rest-api/internal/config"
 	"github.com/mfturkcan/nereye-rest-api/internal/store"
 	"github.com/mfturkcan/nereye-rest-api/pkg/repository"
 )
@@ -19,8 +20,9 @@ var (
 func main() {
 	var (
 		store  *store.Store         = store.NewStore(logger, &ctx)
-		db     *sql.DB              = store.InitializeDatabase()
 		router *server.CustomRouter = server.NewCustomRouter(logger)
+		_      *config.Config       = config.NewConfig(logger).LoadEnv()
+		db     *sql.DB              = store.InitializeDatabase()
 
 		userRepository       *repository.CustomUserRepository       = repository.NewUserRepository(logger, db)
 		customerRepository   *repository.CustomCustomerRepository   = repository.NewCustomerRepository(logger, db)
@@ -29,7 +31,6 @@ func main() {
 		_                    *handler.CustomCustomerHandler         = handler.NewCustomCustomerHandler(logger, customerRepository, router)
 		_                    *handler.CustomRestaurantHandler       = handler.NewCustomRestaurantHandler(logger, restaurantRepository, router)
 	)
-
 	defer store.Close()
 
 	server := server.NewServer(logger, &ctx, router)

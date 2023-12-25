@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -24,12 +25,14 @@ func NewServer(log *log.Logger, ctx *context.Context, router *CustomRouter) *Ser
 
 func (s *Server) ListenAndServe() {
 	httpServer := http.Server{
-		Addr:         ":3000",
+		Addr:         os.Getenv("APP_PORT"),
 		Handler:      s.router.Router,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 5 * time.Second,
 		IdleTimeout:  2 * time.Minute,
 	}
+
+	s.logger.Println("Starting server on", httpServer.Addr)
 
 	s.logger.Fatalln(httpServer.ListenAndServe())
 }

@@ -3,7 +3,9 @@ package store
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log"
+	"os"
 
 	_ "github.com/lib/pq"
 )
@@ -37,9 +39,17 @@ func (store *Store) Close() {
 }
 
 func (store *Store) createConnection() {
-	const connectionString = "postgres://mfturkcan:@localhost:5432/nereyedb?sslmode=disable"
+	var (
+		Username         = os.Getenv("DB_USER")
+		Password         = os.Getenv("DB_PASSWORD")
+		Host             = os.Getenv("DB_HOST")
+		Port             = os.Getenv("DB_PORT")
+		DB               = os.Getenv("DB_NAME")
+		Driver           = os.Getenv("DB_DRIVER")
+		ConnectionString = fmt.Sprintf("%s://%s:%s@%s:%s/%s?sslmode=disable", Driver, Username, Password, Host, Port, DB)
+	)
 
-	db, err := sql.Open("postgres", connectionString)
+	db, err := sql.Open(Driver, ConnectionString)
 
 	if err != nil {
 		store.logger.Println("Error creating instance of db")
@@ -53,6 +63,7 @@ func (store *Store) createConnection() {
 		store.logger.Println(err)
 	}
 
+	store.logger.Println("Successfully connected to db")
 	store.DB = db
 }
 

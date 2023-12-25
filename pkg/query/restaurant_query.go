@@ -9,6 +9,15 @@ func Restaurant_All(customerId string) string {
 	query := `SELECT
 	r.photo_url,
 	r.sign_name,
+	r.about_us,
+	r.extra_info,
+	r.phone_number,
+	r.workplace_phone_number,
+	r.is_available,
+	r.available_at_start,
+	r.available_at_end,
+	r.weekend_available_at_start,
+	r.weekend_available_at_end,
 	a.country,
 	a.city,
 	a.county,
@@ -28,5 +37,19 @@ func Restaurant_All(customerId string) string {
 }
 
 func Restaurant_InsertQuery() string {
-	return "INSERT INTO restaurant (photo_url, sign_name, address_id, customer_id) VALUES ($1, $2, $3, $4);"
+	return `INSERT INTO restaurant 
+		(photo_url,
+		sign_name,
+		about_us,
+		extra_info,
+		phone_number,
+		workplace_phone_number,
+		is_available,
+		available_at_start,
+		available_at_end,
+		weekend_available_at_start,
+		weekend_available_at_end,
+		address_id,
+		customer_id)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);`
 }

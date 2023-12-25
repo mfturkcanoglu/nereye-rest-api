@@ -14,7 +14,7 @@ WORKDIR /app
 
 # Copy the source from the current directory to the working Directory inside the container
 COPY . .
-#COPY .env .
+COPY .env .
 
 # Download all the dependencies
 RUN go get -d -v ./...
@@ -26,7 +26,7 @@ RUN go install -v ./...
 RUN go build -o /build
 
 # Expose port 8080 to the outside world
-EXPOSE 3000
+EXPOSE 4000
 
 # Run the executable
 CMD [ "/build" ]
