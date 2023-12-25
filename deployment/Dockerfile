@@ -7,7 +7,7 @@ RUN go mod download
 
 COPY . ./
 
-RUN go build cmd/app/main.go
+RUN go build -o ./ cmd/app/main.go
 
 EXPOSE 4000
 
