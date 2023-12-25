@@ -7,6 +7,6 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-RUN go build -o cmd/app
+RUN go build cmd/app/main.go -o /server
 
-CMD ["cmd/app"]
+CMD ["/server"]
