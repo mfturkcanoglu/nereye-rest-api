@@ -1,5 +1,5 @@
 build_run:
-	docker build --rm -t astra-nereye:latest -f deployment/Dockerfile
+	docker build --rm -t astra-nereye:latest . -f deployment/Dockerfile
 	docker run -d --restart unless-stopped -p 7000:7000 --name nereye astra-nereye
 
 remove:

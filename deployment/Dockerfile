@@ -1,32 +1,13 @@
-# Start from golang base image
 FROM golang:latest
-
-# Add Maintainer info
-LABEL maintainer="mfturkcan"
-
-# Install git.
-# Git is required for fetching the dependencies.
-RUN apk update && apk add --no-cache git && apk add --no-cach bash && apk add build-base
-
-# Setup folders
-RUN mkdir /app
 WORKDIR /app
 
-# Copy the source from the current directory to the working Directory inside the container
-COPY . .
-COPY .env .
+COPY go.mod ./
+RUN go mod download
 
-# Download all the dependencies
-RUN go get -d -v ./...
+COPY . ./
 
-# Install the package
-RUN go install -v ./...
+RUN go build -o /nereye-api
 
-# Build the Go app
-RUN go build -o /build
-
-# Expose port 8080 to the outside world
 EXPOSE 4000
 
-# Run the executable
-CMD [ "/build" ]
+CMD [ "/nereye-api" ]
