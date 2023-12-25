@@ -7,8 +7,8 @@ RUN go mod download
 
 COPY . ./
 
-RUN go build -o server cmd/app/main.go
+RUN go build cmd/app/main.go
 
 EXPOSE 4000
 
-CMD ["server"]
+CMD ["/"]
