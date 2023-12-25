@@ -10,4 +10,4 @@ RUN go build -o server cmd/app/main.go
 
 EXPOSE 4000
 
-CMD ["/app/server"]
+CMD ["/server"]
