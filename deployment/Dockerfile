@@ -10,4 +10,6 @@ WORKDIR /cmd/app
 
 RUN go build -o server .
 
+EXPOSE 4000
+
 CMD ["server"]
