@@ -7,6 +7,6 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-RUN go build cmd/app/main.go .
+RUN go build cmd/app/main.go
 
 CMD ["cmd/app/main.go"]
