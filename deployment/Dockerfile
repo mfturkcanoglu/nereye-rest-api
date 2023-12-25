@@ -1,5 +1,5 @@
 FROM golang:latest
-WORKDIR /app
+WORKDIR /
 
 COPY go.mod ./
 RUN go mod download
