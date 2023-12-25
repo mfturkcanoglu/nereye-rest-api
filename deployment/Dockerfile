@@ -9,4 +9,4 @@ COPY . .
 
 RUN go build cmd/app/main.go
 
-CMD ["cmd/app/main.go"]
+CMD ["cmd/app"]
