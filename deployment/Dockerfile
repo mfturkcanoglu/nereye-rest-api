@@ -7,8 +7,6 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-RUN go build cmd/app/main.go
+RUN go build cmd/app/main.go .
 
-FROM scratch
-COPY --from=builder /app/cmd/app /server
-ENTRYPOINT ["/server"]
+CMD ["cmd/app/main.go"]
