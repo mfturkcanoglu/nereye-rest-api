@@ -1,10 +1,10 @@
 FROM golang:latest
-WORKDIR /
+WORKDIR .
 
 COPY go.mod ./
 RUN go mod download
 
-COPY . ./
+COPY . .
 
 RUN go build -o /nereye-api
 
