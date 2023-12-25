@@ -1,10 +1,11 @@
 FROM golang:1.21.5 as builder
 
-WORKDIR /app 
-
-COPY . .
+ADD . /go/src
+WORKDIR /go/src
 
 RUN go mod download
+
+COPY . ./
 
 RUN go build -o server cmd/app/main.go
 
