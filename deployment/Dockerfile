@@ -11,6 +11,6 @@ RUN go build cmd/app/main.go
 
 EXPOSE 4000
 
-COPY --from=builder /go/src/ /app
+COPY --from=builder /go/src/ /server
 
-CMD ["/app"]
+CMD ["/server"]
