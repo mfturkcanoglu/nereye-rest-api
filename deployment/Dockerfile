@@ -7,10 +7,10 @@ RUN go mod download
 
 COPY . ./
 
-RUN go build -o ./ cmd/app/main.go
+RUN go build cmd/app/main.go
 
 EXPOSE 4000
 
-RUN chmod +x ./
+COPY --from=builder /go/src/ /app
 
-CMD ["./"]
+CMD ["/app"]
