@@ -11,4 +11,4 @@ RUN go build cmd/app/main.go
 
 EXPOSE 4000
 
-CMD ["/"]
+CMD ["./"]
