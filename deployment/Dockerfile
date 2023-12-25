@@ -1,11 +1,14 @@
-FROM golang:latest
-WORKDIR /
+FROM golang:1.21.5 as builder
 
-COPY . ./
+ARG CGO_ENABLED=0
+WORKDIR /app
+
+COPY go.mod go.sum ./
 RUN go mod download
+COPY . .
 
-RUN go build -o /cmd/app
+RUN go build
 
-EXPOSE 4000
-
-CMD [ "/cmd/app" ]
+FROM scratch
+COPY --from=builder /app/cmd/app /server
+ENTRYPOINT ["/server"]
