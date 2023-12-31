@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"math"
-
 	"github.com/google/uuid"
 )
 
@@ -44,10 +42,10 @@ type CustomerCreate struct {
 }
 
 func (customerCreate *CustomerCreate) CreateRandomCustomerUsername() string {
-	maxLengthOfName := int(math.Min(float64(len(customerCreate.FullName)), 10))
+	maxLengthOfName := min(len(customerCreate.FullName), 10)
 	fullName := customerCreate.FullName[0:maxLengthOfName]
 
-	maxLengthOfSurname := int(math.Min(float64(len(customerCreate.Surname)), 10))
+	maxLengthOfSurname := min(len(customerCreate.Surname), 10)
 	surname := customerCreate.FullName[0:maxLengthOfSurname]
 
 	currentTime := time.Now().Unix()

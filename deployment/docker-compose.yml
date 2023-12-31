@@ -34,3 +34,7 @@ services:
       - "5432:5432"
     networks:
       - nereye
+
+networks:
+  nereye:
+    name: nereye
