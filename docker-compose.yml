@@ -30,11 +30,19 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
       - DATABASE_HOST=${DB_HOST}
+    volumes:
+      - pgsql:/var/lib/pgsql/nereye
     ports:
       - "5432:5432"
     networks:
       - nereye
 
+volumes:
+  pgsql:
+    external: true
+    name: pgsql
+
 networks:
   nereye:
+    external: true
     name: nereye
