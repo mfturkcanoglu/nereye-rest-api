@@ -19,14 +19,19 @@ type RestaurantHandler interface {
 }
 
 type CustomRestaurantHandler struct {
-	restaurantRepository *repository.CustomRestaurantRepository
-	logger               *log.Logger
+	restaurantRepository      *repository.CustomRestaurantRepository
+	restaurantPhotoRepository *repository.CustomRestaurantPhotoRepository
+	logger                    *log.Logger
 }
 
-func NewCustomRestaurantHandler(logger *log.Logger, restaurantRepository *repository.CustomRestaurantRepository, router *server.CustomRouter) *CustomRestaurantHandler {
+func NewCustomRestaurantHandler(logger *log.Logger,
+	restaurantRepository *repository.CustomRestaurantRepository,
+	resturantPhotoRepository *repository.CustomRestaurantPhotoRepository,
+	router *server.CustomRouter) *CustomRestaurantHandler {
 	handler := &CustomRestaurantHandler{
-		logger:               logger,
-		restaurantRepository: restaurantRepository,
+		logger:                    logger,
+		restaurantRepository:      restaurantRepository,
+		restaurantPhotoRepository: resturantPhotoRepository,
 	}
 	handler.RegisterRoutes(router)
 	return handler
@@ -38,6 +43,26 @@ func (h *CustomRestaurantHandler) GetAll(w http.ResponseWriter, r *http.Request)
 
 	if err != nil {
 		msg := "Restaurants cannot handled from db"
+		h.logger.Println(msg)
+		w.WriteHeader(http.StatusInternalServerError)
+		_ = json.NewEncoder(w).Encode(&errors.ErrorResponse{
+			Message: msg,
+			Status:  http.StatusInternalServerError,
+		})
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(&res)
+}
+
+func (h *CustomRestaurantHandler) GetRestaurantPhotos(w http.ResponseWriter, r *http.Request) {
+	restaurantId := r.URL.Query().Get("restaurant-id")
+
+	res, err := h.restaurantPhotoRepository.GetAll(restaurantId)
+
+	if err != nil {
+		msg := "Restaurant photos cannot handled from db"
 		h.logger.Println(msg)
 		w.WriteHeader(http.StatusInternalServerError)
 		_ = json.NewEncoder(w).Encode(&errors.ErrorResponse{
@@ -87,5 +112,6 @@ func (h *CustomRestaurantHandler) RegisterRoutes(router *server.CustomRouter) {
 	router.Router.Route("/api/v1/restaurant", func(r chi.Router) {
 		r.Get("/", h.GetAll)
 		r.Post("/", h.CreateRestaurant)
+		r.Get("/photos", h.GetRestaurantPhotos)
 	})
 }

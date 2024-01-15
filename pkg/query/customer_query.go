@@ -21,3 +21,5 @@ func CustomerUserSelectQuery() string {
 		order by c.updated_at desc
 	`
 }
+
+
