@@ -28,6 +28,7 @@ func main() {
 		customerRepository        *repository.CustomCustomerRepository        = repository.NewCustomerRepository(logger, db)
 		restaurantRepository      *repository.CustomRestaurantRepository      = repository.NewRestaurantRepository(logger, db)
 		restaurantPhotoRepository *repository.CustomRestaurantPhotoRepository = repository.NewRestaurantPhotoRepository(logger, db)
+		_                         *repository.CustomCategoryRepository        = repository.NewCategoryRepository(logger, db)
 		_                         *handler.CustomUserHandler                  = handler.NewCustomUserHandler(logger, userRepository, router)
 		_                         *handler.CustomCustomerHandler              = handler.NewCustomCustomerHandler(logger, customerRepository, router)
 		_                         *handler.CustomRestaurantHandler            = handler.NewCustomRestaurantHandler(logger, restaurantRepository, restaurantPhotoRepository, router)

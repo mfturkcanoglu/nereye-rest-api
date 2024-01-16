@@ -1,13 +1,6 @@
 package model
 
-import (
-	"time"
-
-	"github.com/google/uuid"
-)
-
 type User struct {
-	ID          uuid.UUID
 	Username    string
 	Email       string
 	PhoneNumber string
@@ -16,10 +9,7 @@ type User struct {
 	Verified    bool
 	Enabled     bool
 	Active      bool
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	DeletedAt   time.Time
-	Deleted     bool
+	DefaultModel
 }
 
 type UserGet struct {

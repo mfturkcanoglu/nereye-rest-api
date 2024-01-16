@@ -1,21 +1,11 @@
 package model
 
-import (
-	"time"
-
-	"github.com/google/uuid"
-)
-
 type RestaurantPhoto struct {
-	ID         uuid.UUID
 	Name       *string
 	Url        string
 	ParentID   string
 	PhotoOrder *int16
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	DeletedAt  time.Time
-	Deleted    bool
+	DefaultModel
 }
 
 type RestaurantPhotoCreate struct {

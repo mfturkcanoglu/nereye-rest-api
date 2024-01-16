@@ -8,7 +8,6 @@ import (
 
 // Restaurant Model in DB
 type Restaurant struct {
-	ID                      uuid.UUID
 	PhotoUrl                string
 	SignName                string
 	AboutUs                 string
@@ -22,10 +21,7 @@ type Restaurant struct {
 	WeekendAvailableAtEnd   time.Time
 	AddressId               uuid.UUID
 	CustomerId              uuid.UUID
-	CreatedAt               time.Time
-	UpdatedAt               time.Time
-	DeletedAt               time.Time
-	Deleted                 bool
+	DefaultModel
 }
 
 type RestaurantGet struct {

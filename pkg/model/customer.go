@@ -8,15 +8,11 @@ import (
 )
 
 type Customer struct {
-	ID           uuid.UUID
 	CompanyName  string
 	CustomerType string
 	AddressId    uuid.UUID
 	UserId       uuid.UUID
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	DeletedAt    time.Time
-	Deleted      bool
+	DefaultModel
 }
 
 type CustomerGet struct {
