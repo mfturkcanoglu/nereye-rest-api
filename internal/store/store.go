@@ -46,7 +46,7 @@ func (store *Store) createConnection() {
 		Port             = os.Getenv("DB_PORT")
 		DB               = os.Getenv("DB_NAME")
 		Driver           = os.Getenv("DB_DRIVER")
-		ConnectionString = fmt.Sprintf("%s://%s:%s@%s:%s/%s?sslmode=disable", Driver, Username, Password, Host, Port, DB)
+		ConnectionString = fmt.Sprintf("%s://%s:%s@%s:%s:5432/%s?sslmode=disable", Driver, Username, Password, Host, Port, DB)
 	)
 
 	db, err := sql.Open(Driver, ConnectionString)
