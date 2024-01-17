@@ -80,6 +80,8 @@ func (store *Store) Migrate() {
 	}
 
 	if err := goose.Up(store.DB, "migrations"); err != nil {
+		store.logger.Println("Error occured during migrations applied")
+
 		panic(err)
 	}
 
