@@ -29,6 +29,7 @@ func NewStore(logger *log.Logger, ctx *context.Context) *Store {
 
 func (store *Store) InitializeDatabase() *sql.DB {
 	store.createConnection()
+	store.logger.Println("saaa0")
 	store.migrate()
 	return store.DB
 }
