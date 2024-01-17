@@ -3,11 +3,13 @@ package store
 import (
 	"context"
 	"database/sql"
+	"embed"
 	"fmt"
 	"log"
 	"os"
 
 	_ "github.com/lib/pq"
+	"github.com/pressly/goose/v3"
 )
 
 type Store struct {
@@ -27,7 +29,7 @@ func NewStore(logger *log.Logger, ctx *context.Context) *Store {
 
 func (store *Store) InitializeDatabase() *sql.DB {
 	store.createConnection()
-	store.autoMigrate()
+	store.Migrate()
 	return store.DB
 }
 
@@ -67,10 +69,17 @@ func (store *Store) createConnection() {
 	store.DB = db
 }
 
-func (store *Store) autoMigrate() {
-	//err := store.DB..AutoMigrate(&model.Todo{})
+func (store *Store) Migrate() {
+	//go:embed db/migrations/*.sql
+	var embedMigrations embed.FS
 
-	// if err != nil {
-	// 	store.logger.Panicln("Error occured while creating migrations")
-	// }
+	goose.SetBaseFS(embedMigrations)
+
+	if err := goose.SetDialect("postgres"); err != nil {
+		panic(err)
+	}
+
+	if err := goose.Up(store.DB, "migrations"); err != nil {
+		panic(err)
+	}
 }
