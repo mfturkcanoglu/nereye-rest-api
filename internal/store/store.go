@@ -12,6 +12,9 @@ import (
 	"github.com/pressly/goose/v3"
 )
 
+//go:embed migrations/*.sql
+var embedMigrations embed.FS
+
 type Store struct {
 	DB     *sql.DB
 	logger *log.Logger
@@ -28,9 +31,7 @@ func NewStore(logger *log.Logger, ctx *context.Context) *Store {
 }
 
 func (store *Store) InitializeDatabase() *sql.DB {
-	store.logger.Println("saaa-1")
 	store.createConnection()
-	store.logger.Println("saaa0")
 	store.migrate()
 	return store.DB
 }
@@ -72,13 +73,7 @@ func (store *Store) createConnection() {
 }
 
 func (store *Store) migrate() {
-	store.logger.Println("saaa")
-	//go:embed migrations/*.sql
-	var embedMigrations embed.FS
-	store.logger.Println("saaa1")
-
 	goose.SetBaseFS(embedMigrations)
-	store.logger.Println("saaa2")
 
 	if err := goose.SetDialect("postgres"); err != nil {
 		store.logger.Println("Error occured during migrations applied")
