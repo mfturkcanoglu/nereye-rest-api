@@ -70,7 +70,7 @@ func (store *Store) createConnection() {
 }
 
 func (store *Store) Migrate() {
-	//go:embed db/migrations/*.sql
+	//go:embed migrations/*.sql
 	var embedMigrations embed.FS
 
 	goose.SetBaseFS(embedMigrations)
@@ -82,4 +82,6 @@ func (store *Store) Migrate() {
 	if err := goose.Up(store.DB, "migrations"); err != nil {
 		panic(err)
 	}
+
+	store.logger.Println("Migrations applied")
 }
