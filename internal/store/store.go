@@ -65,7 +65,7 @@ func (store *Store) createConnection() {
 
 	if err != nil {
 		store.logger.Println("Error occured reaching db")
-		store.logger.Println(err)
+		store.logger.Fatalln(err)
 	}
 
 	store.logger.Println("Successfully connected to db")
