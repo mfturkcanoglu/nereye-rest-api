@@ -76,6 +76,8 @@ func (store *Store) Migrate() {
 	goose.SetBaseFS(embedMigrations)
 
 	if err := goose.SetDialect("postgres"); err != nil {
+		store.logger.Println("Error occured during migrations applied")
+
 		panic(err)
 	}
 
