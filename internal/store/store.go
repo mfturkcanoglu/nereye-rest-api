@@ -29,7 +29,7 @@ func NewStore(logger *log.Logger, ctx *context.Context) *Store {
 
 func (store *Store) InitializeDatabase() *sql.DB {
 	store.createConnection()
-	store.Migrate()
+	store.migrate()
 	return store.DB
 }
 
@@ -69,7 +69,7 @@ func (store *Store) createConnection() {
 	store.DB = db
 }
 
-func (store *Store) Migrate() {
+func (store *Store) migrate() {
 	//go:embed migrations/*.sql
 	var embedMigrations embed.FS
 
