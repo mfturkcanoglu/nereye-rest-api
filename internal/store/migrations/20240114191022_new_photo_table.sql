@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS restaurant_photo (
     updated_at TIMESTAMP DEFAULT (now() AT TIME ZONE 'utc') NOT NULL,
     deleted_at TIMESTAMP,
     deleted BOOLEAN,
-    CONSTRAINT fk_restaurant FOREIGN KEY(parent_id) REFERENCES restaurant(id),
+    CONSTRAINT fk_restaurant FOREIGN KEY(parent_id) REFERENCES restaurant(id)
 );
 -- +goose StatementEnd
 
