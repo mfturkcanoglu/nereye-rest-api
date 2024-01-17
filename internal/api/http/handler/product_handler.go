@@ -34,8 +34,7 @@ func (h *CustomProductHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	res, err := h.productRepository.GetAll()
 
 	if err != nil {
-		msg := errors.HandleDataCannotHandledError(w, r)
-		h.logger.Println(msg)
+		errors.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 
@@ -48,16 +47,14 @@ func (h *CustomProductHandler) Create(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&product)
 
 	if err != nil {
-		msg := errors.HandleInvalidSchemaError(w, r, err)
-		h.logger.Println(msg)
+		errors.HandleInvalidSchemaError(w, r, err, h.logger)
 		return
 	}
 
 	err = h.productRepository.Create(product)
 
 	if err != nil {
-		msg := errors.HandleDataCannotHandledError(w, r)
-		h.logger.Println(msg)
+		errors.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 

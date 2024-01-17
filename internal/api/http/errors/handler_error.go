@@ -2,6 +2,7 @@ package errors
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -16,23 +17,23 @@ const (
 	InvalidSchemaError     = "Schema is not correct"
 )
 
-func HandleDataCannotHandledError(w http.ResponseWriter, r *http.Request) string {
+func HandleDataCannotHandledError(w http.ResponseWriter, r *http.Request, log *log.Logger) {
 	msg := DataCannotHandledError
+	log.Println(msg)
 	w.WriteHeader(http.StatusInternalServerError)
 	_ = json.NewEncoder(w).Encode(&ErrorResponse{
 		Message: msg,
 		Status:  http.StatusInternalServerError,
 	})
-	return msg
 }
 
-func HandleInvalidSchemaError(w http.ResponseWriter, r *http.Request, err error) string {
+func HandleInvalidSchemaError(w http.ResponseWriter, r *http.Request, err error, log *log.Logger) {
 	msg := InvalidSchemaError
+	log.Println(msg)
 	w.WriteHeader(http.StatusBadRequest)
 	_ = json.NewEncoder(w).Encode(&ErrorResponse{
 		Message: msg,
 		Detail:  err.Error(),
 		Status:  http.StatusBadRequest,
 	})
-	return msg
 }

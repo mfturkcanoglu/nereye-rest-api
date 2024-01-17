@@ -42,13 +42,7 @@ func (h *CustomRestaurantHandler) GetAll(w http.ResponseWriter, r *http.Request)
 	res, err := h.restaurantRepository.GetAll(customerId)
 
 	if err != nil {
-		msg := "Restaurants cannot handled from db"
-		h.logger.Println(msg)
-		w.WriteHeader(http.StatusInternalServerError)
-		_ = json.NewEncoder(w).Encode(&errors.ErrorResponse{
-			Message: msg,
-			Status:  http.StatusInternalServerError,
-		})
+		errors.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 
@@ -62,13 +56,7 @@ func (h *CustomRestaurantHandler) GetRestaurantPhotos(w http.ResponseWriter, r *
 	res, err := h.restaurantPhotoRepository.GetAll(restaurantId)
 
 	if err != nil {
-		msg := "Restaurant photos cannot handled from db"
-		h.logger.Println(msg)
-		w.WriteHeader(http.StatusInternalServerError)
-		_ = json.NewEncoder(w).Encode(&errors.ErrorResponse{
-			Message: msg,
-			Status:  http.StatusInternalServerError,
-		})
+		errors.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 
@@ -81,27 +69,14 @@ func (h *CustomRestaurantHandler) CreateRestaurant(w http.ResponseWriter, r *htt
 	err := json.NewDecoder(r.Body).Decode(&restaurant)
 
 	if err != nil {
-		msg := "Schema is not correct"
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(&errors.ErrorResponse{
-			Message: msg,
-			Detail:  err.Error(),
-			Status:  http.StatusBadRequest,
-		})
+		errors.HandleInvalidSchemaError(w, r, err, h.logger)
 		return
 	}
 
 	err = h.restaurantRepository.CreateRestaurant(restaurant)
 
 	if err != nil {
-		msg := "Restaurants cannot handled from db"
-		h.logger.Println(msg)
-		w.WriteHeader(http.StatusInternalServerError)
-		_ = json.NewEncoder(w).Encode(&errors.ErrorResponse{
-			Message: msg,
-			Status:  http.StatusInternalServerError,
-			Detail:  err.Error(),
-		})
+		errors.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 

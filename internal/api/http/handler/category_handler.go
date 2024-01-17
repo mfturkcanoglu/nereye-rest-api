@@ -30,8 +30,7 @@ func (h *CustomCategoryHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	res, err := h.categoryRepository.GetAll()
 
 	if err != nil {
-		msg := errors.HandleDataCannotHandledError(w, r)
-		h.logger.Println(msg)
+		errors.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 
@@ -44,16 +43,14 @@ func (h *CustomCategoryHandler) Create(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&category)
 
 	if err != nil {
-		msg := errors.HandleInvalidSchemaError(w, r, err)
-		h.logger.Println(msg)
+		errors.HandleInvalidSchemaError(w, r, err, h.logger)
 		return
 	}
 
 	err = h.categoryRepository.Create(category)
 
 	if err != nil {
-		msg := errors.HandleDataCannotHandledError(w, r)
-		h.logger.Println(msg)
+		errors.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 
