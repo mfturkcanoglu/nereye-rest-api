@@ -70,10 +70,13 @@ func (store *Store) createConnection() {
 }
 
 func (store *Store) migrate() {
+	store.logger.Println("saaa")
 	//go:embed migrations/*.sql
 	var embedMigrations embed.FS
+	store.logger.Println("saaa1")
 
 	goose.SetBaseFS(embedMigrations)
+	store.logger.Println("saaa2")
 
 	if err := goose.SetDialect("postgres"); err != nil {
 		store.logger.Println("Error occured during migrations applied")
