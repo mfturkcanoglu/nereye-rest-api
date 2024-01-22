@@ -13,10 +13,15 @@ build_run:
 remove:
 	sudo docker compose down
 
+restart:
+	sudo docker compose down
+	sudo docker image remove nereye-rest-api-app -f
+	sudo docker compose up -d --remove-orphans --force-recreate
+
 log:
 	docker container logs nereye
 
 clean_cache:
 	sudo docker builder prune
 
-.PHONY: build_run_container, remove_container, build_run, remove, log, clean_cache
+.PHONY: build_run_container, restart, remove_container, build_run, remove, log, clean_cache
