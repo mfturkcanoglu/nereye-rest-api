@@ -38,11 +38,11 @@ type CustomerCreate struct {
 }
 
 func (customerCreate *CustomerCreate) CreateRandomCustomerUsername() string {
-	maxLengthOfName := min(len(customerCreate.FullName), 10)
+	maxLengthOfName := min(len(customerCreate.FullName), 5)
 	fullName := customerCreate.FullName[0:maxLengthOfName]
 
-	maxLengthOfSurname := min(len(customerCreate.Surname), 10)
-	surname := customerCreate.FullName[0:maxLengthOfSurname]
+	maxLengthOfSurname := min(len(customerCreate.Surname), 5)
+	surname := customerCreate.Surname[0:maxLengthOfSurname]
 
 	currentTime := time.Now().Unix()
 
