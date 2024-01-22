@@ -17,9 +17,10 @@ restart:
 	sudo docker compose down
 	sudo docker image remove nereye-rest-api-app -f
 	sudo docker compose up -d --remove-orphans --force-recreate
+	sudo docker container logs golang_container
 
 log:
-	docker container logs nereye
+	sudo docker container logs golang_container
 
 clean_cache:
 	sudo docker builder prune
