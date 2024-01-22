@@ -10,7 +10,6 @@ USING TO_CHAR(weekend_available_at_start, 'HH12:MM');
 ALTER COLUMN weekend_available_at_end TYPE TEXT
 USING TO_CHAR(weekend_available_at_end, 'HH12:MM');
 
-ALTER TABLE restaurant
 DROP COLUMN is_available;
 -- +goose StatementEnd
 
