@@ -55,7 +55,6 @@ func (repo *CustomRestaurantRepository) CreateRestaurant(create *model.Restauran
 		create.ExtraInfo,
 		create.PhoneNumber,
 		create.WorkplacePhoneNumber,
-		create.IsAvailable,
 		create.AvailableAtStart,
 		create.AvailableAtEnd,
 		create.WeekendAvailableAtStart,
@@ -99,7 +98,6 @@ func (repo *CustomRestaurantRepository) getRestaurantsFromRows(rows *sql.Rows) (
 			&restaurant.ExtraInfo,
 			&restaurant.PhoneNumber,
 			&restaurant.WorkplacePhoneNumber,
-			&restaurant.IsAvailable,
 			&restaurant.AvailableAtStart,
 			&restaurant.AvailableAtEnd,
 			&restaurant.WeekendAvailableAtStart,
@@ -112,6 +110,9 @@ func (repo *CustomRestaurantRepository) getRestaurantsFromRows(rows *sql.Rows) (
 			&restaurant.Latitude,
 			&restaurant.Longitude,
 		)
+
+		// TODO: Get it from time_util
+		restaurant.IsAvailable = true
 
 		if err != nil {
 			repo.logger.Println(err)
