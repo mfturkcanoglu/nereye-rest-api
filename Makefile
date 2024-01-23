@@ -17,6 +17,7 @@ restart:
 	sudo docker compose down
 	sudo docker image remove nereye-rest-api-app -f
 	sudo docker compose up -d --remove-orphans --force-recreate
+	timeout 3
 	sudo docker container logs golang_container
 
 log:

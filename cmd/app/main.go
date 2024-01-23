@@ -35,6 +35,7 @@ func main() {
 		_                         *handler.CustomRestaurantHandler            = handler.NewCustomRestaurantHandler(logger, restaurantRepository, restaurantPhotoRepository, router)
 		_                         *handler.CustomCategoryHandler              = handler.NewCustomCategoryHandler(logger, categoryRepository, router)
 		_                         *handler.CustomProductHandler               = handler.NewCustomProductHandler(logger, productRepository, router)
+		_                         *handler.CustomAuthHandler                  = (*handler.CustomAuthHandler)(handler.NewCustomAuthHandler(logger, userRepository, router))
 	)
 	defer store.Close()
 

@@ -1,5 +1,7 @@
 package query
 
+import "fmt"
+
 func UserInsertQueryWithReturn() string {
 	return UserInsertQuery() + "RETURNING id;"
 }
@@ -19,4 +21,18 @@ func UserSelectQuery() string {
 		from users u
 		order by u.updated_at desc
 	`
+}
+
+func UserGetByUsernameAndPasswordQuery(username string, password string) string {
+	return fmt.Sprintf(
+		`
+		SELECT
+		u.username,
+		u.phone_number,
+		u.email,
+		u.full_name,
+		u.surname
+		FROM users u
+		WHERE u.username = '%s' AND u.password = '%s'
+	`, username, password)
 }

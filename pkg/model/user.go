@@ -27,3 +27,13 @@ type UserCreate struct {
 	FullName    string `json:"full_name"`
 	Surname     string `json:"surname"`
 }
+
+type UserLoginRequestDto struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type UserLoginResponseDto struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+}
