@@ -39,7 +39,7 @@ func (h *CustomAuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = h.userRepository.GetUserByUsernameAndPassword(dto.Username, dto.Password)
+	user, err := h.userRepository.GetUserByUsernameAndPassword(dto.Username, dto.Password)
 
 	if err != nil {
 		errors.HandleDataCannotHandledError(w, r, h.logger)
@@ -47,7 +47,7 @@ func (h *CustomAuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	res := &model.UserLoginResponseDto{
-		AccessToken:  "dümenden access token",
+		AccessToken:  user.Username,
 		RefreshToken: "dümenden refresh token",
 	}
 
