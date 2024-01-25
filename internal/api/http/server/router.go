@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	"github.com/mfturkcan/nereye-rest-api/internal/api/http/errors"
+	"github.com/mfturkcan/nereye-rest-api/internal/api/http/error_handler"
 	m "github.com/mfturkcan/nereye-rest-api/internal/api/http/middleware"
 )
 
@@ -54,7 +54,7 @@ func (router *CustomRouter) LoadCustomerMiddlewares() {
 func (router *CustomRouter) LoadCustomRoutes() {
 	router.Router.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
-		_ = json.NewEncoder(w).Encode(&errors.ErrorResponse{
+		_ = json.NewEncoder(w).Encode(&error_handler.ErrorResponse{
 			Message: "Request not found",
 			Status:  http.StatusNotFound,
 			Detail:  "No such a request exists on path",
@@ -63,7 +63,7 @@ func (router *CustomRouter) LoadCustomRoutes() {
 
 	router.Router.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		_ = json.NewEncoder(w).Encode(&errors.ErrorResponse{
+		_ = json.NewEncoder(w).Encode(&error_handler.ErrorResponse{
 			Message: "Method is not valid",
 			Status:  http.StatusMethodNotAllowed,
 		})

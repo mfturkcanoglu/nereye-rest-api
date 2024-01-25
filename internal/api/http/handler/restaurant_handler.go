@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/mfturkcan/nereye-rest-api/internal/api/http/errors"
+	"github.com/mfturkcan/nereye-rest-api/internal/api/http/error_handler"
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/server"
 	"github.com/mfturkcan/nereye-rest-api/pkg/model"
 	"github.com/mfturkcan/nereye-rest-api/pkg/repository"
@@ -42,7 +42,7 @@ func (h *CustomRestaurantHandler) GetAll(w http.ResponseWriter, r *http.Request)
 	res, err := h.restaurantRepository.GetAll(customerId)
 
 	if err != nil {
-		errors.HandleDataCannotHandledError(w, r, h.logger)
+		error_handler.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 
@@ -56,7 +56,7 @@ func (h *CustomRestaurantHandler) GetRestaurantPhotos(w http.ResponseWriter, r *
 	res, err := h.restaurantPhotoRepository.GetAll(restaurantId)
 
 	if err != nil {
-		errors.HandleDataCannotHandledError(w, r, h.logger)
+		error_handler.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 
@@ -69,14 +69,14 @@ func (h *CustomRestaurantHandler) CreateRestaurant(w http.ResponseWriter, r *htt
 	err := json.NewDecoder(r.Body).Decode(&restaurant)
 
 	if err != nil {
-		errors.HandleInvalidSchemaError(w, r, err, h.logger)
+		error_handler.HandleInvalidSchemaError(w, r, err, h.logger)
 		return
 	}
 
 	err = h.restaurantRepository.CreateRestaurant(restaurant)
 
 	if err != nil {
-		errors.HandleDataCannotHandledError(w, r, h.logger)
+		error_handler.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 

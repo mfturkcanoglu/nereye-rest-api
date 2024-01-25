@@ -96,3 +96,32 @@ func (repo *CustomUserRepository) GetAll() ([]*model.UserGet, error) {
 	}
 	return users, nil
 }
+
+func (repo *CustomUserRepository) GetUser(username string) ([]*model.UserGet, error) {
+	rows, err := repo.db.Query(query.UserByUsernameQuery(username))
+
+	if err != nil {
+		repo.logger.Println(err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	users := []*model.UserGet{}
+
+	for rows.Next() {
+		user := &model.UserGet{}
+		err := rows.Scan(
+			&user.Username,
+			&user.PhoneNumber,
+			&user.Email,
+			&user.FullName,
+			&user.Surname)
+
+		if err != nil {
+			repo.logger.Println(err)
+			return nil, err
+		}
+		users = append(users, user)
+	}
+	return users, nil
+}

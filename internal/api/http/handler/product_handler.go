@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/mfturkcan/nereye-rest-api/internal/api/http/errors"
+	"github.com/mfturkcan/nereye-rest-api/internal/api/http/error_handler"
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/server"
 	"github.com/mfturkcan/nereye-rest-api/pkg/model"
 	"github.com/mfturkcan/nereye-rest-api/pkg/repository"
@@ -34,7 +34,7 @@ func (h *CustomProductHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	res, err := h.productRepository.GetAll()
 
 	if err != nil {
-		errors.HandleDataCannotHandledError(w, r, h.logger)
+		error_handler.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 
@@ -47,14 +47,14 @@ func (h *CustomProductHandler) Create(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&product)
 
 	if err != nil {
-		errors.HandleInvalidSchemaError(w, r, err, h.logger)
+		error_handler.HandleInvalidSchemaError(w, r, err, h.logger)
 		return
 	}
 
 	err = h.productRepository.Create(product)
 
 	if err != nil {
-		errors.HandleDataCannotHandledError(w, r, h.logger)
+		error_handler.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 

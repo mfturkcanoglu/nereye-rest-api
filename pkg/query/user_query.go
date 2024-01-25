@@ -23,6 +23,19 @@ func UserSelectQuery() string {
 	`
 }
 
+func UserByUsernameQuery(username string) string {
+	return fmt.Sprintf(`
+		SELECT
+		u.username,
+		u.phone_number,
+		u.email,
+		u.full_name,
+		u.surname
+		from users u
+		WHERE u.username = '%s'
+	`, username)
+}
+
 func UserGetByUsernameAndPasswordQuery(username string, password string) string {
 	return fmt.Sprintf(
 		`

@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/mfturkcan/nereye-rest-api/internal/api/http/errors"
+	"github.com/mfturkcan/nereye-rest-api/internal/api/http/error_handler"
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/server"
 	"github.com/mfturkcan/nereye-rest-api/pkg/model"
 	"github.com/mfturkcan/nereye-rest-api/pkg/repository"
@@ -35,7 +35,7 @@ func (h *CustomCustomerHandler) GetAllCustomer(w http.ResponseWriter, r *http.Re
 	res, err := h.customerRepository.GetAll()
 
 	if err != nil {
-		errors.HandleDataCannotHandledError(w, r, h.logger)
+		error_handler.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 
@@ -48,14 +48,14 @@ func (h *CustomCustomerHandler) CreateCustomer(w http.ResponseWriter, r *http.Re
 	err := json.NewDecoder(r.Body).Decode(&customer)
 
 	if err != nil {
-		errors.HandleInvalidSchemaError(w, r, err, h.logger)
+		error_handler.HandleInvalidSchemaError(w, r, err, h.logger)
 		return
 	}
 
 	err = h.customerRepository.CreateCustomer(customer)
 
 	if err != nil {
-		errors.HandleDataCannotHandledError(w, r, h.logger)
+		error_handler.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 

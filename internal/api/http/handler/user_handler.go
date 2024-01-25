@@ -2,11 +2,14 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 
+	"strings"
+
 	"github.com/go-chi/chi/v5"
-	"github.com/mfturkcan/nereye-rest-api/internal/api/http/errors"
+	"github.com/mfturkcan/nereye-rest-api/internal/api/http/error_handler"
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/server"
 	"github.com/mfturkcan/nereye-rest-api/pkg/model"
 	"github.com/mfturkcan/nereye-rest-api/pkg/repository"
@@ -31,11 +34,30 @@ func NewCustomUserHandler(logger *log.Logger, userRepository *repository.CustomU
 	return handler
 }
 
+func (h *CustomUserHandler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
+	username := r.URL.Query().Get("username")
+
+	if strings.TrimSpace(username) == "" {
+		error_handler.HandleInvalidSchemaError(w, r, errors.New("Invalid query"), h.logger)
+		return
+	}
+
+	res, err := h.userRepository.GetUser(username)
+
+	if err != nil {
+		error_handler.HandleDataCannotHandledError(w, r, h.logger)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(&res)
+}
+
 func (h *CustomUserHandler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	res, err := h.userRepository.GetAll()
 
 	if err != nil {
-		errors.HandleDataCannotHandledError(w, r, h.logger)
+		error_handler.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 
@@ -48,14 +70,14 @@ func (h *CustomUserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&user)
 
 	if err != nil {
-		errors.HandleInvalidSchemaError(w, r, err, h.logger)
+		error_handler.HandleInvalidSchemaError(w, r, err, h.logger)
 		return
 	}
 
 	_, err = h.userRepository.CreateUser(user)
 
 	if err != nil {
-		errors.HandleDataCannotHandledError(w, r, h.logger)
+		error_handler.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 
@@ -64,7 +86,8 @@ func (h *CustomUserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 func (h *CustomUserHandler) RegisterRoutes(router *server.CustomRouter) {
 	router.Router.Route("/api/v1/user", func(r chi.Router) {
-		r.Get("/", h.GetAllUsers)
+		r.Get("/all", h.GetAllUsers)
+		r.Get("/", h.GetUserInfo)
 		r.Post("/", h.CreateUser)
 	})
 }

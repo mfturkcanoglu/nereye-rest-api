@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/mfturkcan/nereye-rest-api/internal/api/http/errors"
+	"github.com/mfturkcan/nereye-rest-api/internal/api/http/error_handler"
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/server"
 	"github.com/mfturkcan/nereye-rest-api/pkg/model"
 	"github.com/mfturkcan/nereye-rest-api/pkg/repository"
@@ -35,14 +35,14 @@ func (h *CustomAuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&dto)
 
 	if err != nil {
-		errors.HandleInvalidSchemaError(w, r, err, h.logger)
+		error_handler.HandleInvalidSchemaError(w, r, err, h.logger)
 		return
 	}
 
 	user, err := h.userRepository.GetUserByUsernameAndPassword(dto.Username, dto.Password)
 
 	if err != nil {
-		errors.HandleDataCannotHandledError(w, r, h.logger)
+		error_handler.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 
