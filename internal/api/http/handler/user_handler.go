@@ -11,6 +11,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/error_handler"
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/server"
+	"github.com/mfturkcan/nereye-rest-api/internal/service"
 	"github.com/mfturkcan/nereye-rest-api/pkg/model"
 	"github.com/mfturkcan/nereye-rest-api/pkg/repository"
 )
@@ -23,12 +24,14 @@ type UserHandler interface {
 type CustomUserHandler struct {
 	userRepository *repository.CustomUserRepository
 	logger         *log.Logger
+	service        *service.UserService
 }
 
-func NewCustomUserHandler(logger *log.Logger, userRepository *repository.CustomUserRepository, router *server.CustomRouter) *CustomUserHandler {
+func NewCustomUserHandler(logger *log.Logger, userRepository *repository.CustomUserRepository, router *server.CustomRouter, service *service.UserService) *CustomUserHandler {
 	handler := &CustomUserHandler{
 		logger:         logger,
 		userRepository: userRepository,
+		service:        service,
 	}
 	handler.RegisterRoutes(router)
 	return handler
@@ -74,7 +77,7 @@ func (h *CustomUserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = h.userRepository.CreateUser(user)
+	err = h.service.CreateUser(user)
 
 	if err != nil {
 		error_handler.HandleDataCannotHandledError(w, r, h.logger)

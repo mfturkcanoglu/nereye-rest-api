@@ -33,7 +33,7 @@ func (repo *CustomUserRepository) CreateUser(userCreate *model.UserCreate) (stri
 
 	err := repo.db.QueryRow(
 		query.UserInsertQuery(),
-		userCreate.Username, userCreate.Email, userCreate.PhoneNumber, userCreate.FullName, userCreate.Surname,
+		userCreate.Username, userCreate.Email, userCreate.PhoneNumber, userCreate.FullName, userCreate.Surname, userCreate.Password,
 	).Scan(&id)
 
 	if err != nil {

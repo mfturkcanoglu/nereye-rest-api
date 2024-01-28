@@ -27,22 +27,17 @@ type CustomerGet struct {
 }
 
 type CustomerCreate struct {
-	CompanyName     string `json:"company_name"`
-	CustomerType    string `json:"customer_type"`
-	Email           string `json:"email"`
-	PhoneNumber     string `json:"phone_number"`
-	FullName        string `json:"full_name"`
-	Surname         string `json:"surname"`
-	Password        string `json:"password"`
-	PasswordConfirm string `json:"password_confirm"`
+	CompanyName  string `json:"company_name"`
+	CustomerType string `json:"customer_type"`
+	User         UserCreate
 }
 
 func (customerCreate *CustomerCreate) CreateRandomCustomerUsername() string {
-	maxLengthOfName := min(len(customerCreate.FullName), 5)
-	fullName := customerCreate.FullName[0:maxLengthOfName]
+	maxLengthOfName := min(len(customerCreate.User.FullName), 5)
+	fullName := customerCreate.User.FullName[0:maxLengthOfName]
 
-	maxLengthOfSurname := min(len(customerCreate.Surname), 5)
-	surname := customerCreate.Surname[0:maxLengthOfSurname]
+	maxLengthOfSurname := min(len(customerCreate.User.Surname), 5)
+	surname := customerCreate.User.Surname[0:maxLengthOfSurname]
 
 	currentTime := time.Now().Unix()
 

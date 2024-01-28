@@ -21,11 +21,13 @@ type UserGet struct {
 }
 
 type UserCreate struct {
-	Username    string `json:"username"`
-	Email       string `json:"email"`
-	PhoneNumber string `json:"phone_number"`
-	FullName    string `json:"full_name"`
-	Surname     string `json:"surname"`
+	Username        string `json:"username"`
+	Email           string `json:"email"`
+	PhoneNumber     string `json:"phone_number"`
+	FullName        string `json:"full_name"`
+	Surname         string `json:"surname"`
+	Password        string `json:"password"`
+	PasswordConfirm string `json:"password_confirm"`
 }
 
 type UserLoginRequestDto struct {

@@ -7,7 +7,7 @@ func UserInsertQueryWithReturn() string {
 }
 
 func UserInsertQuery() string {
-	return "INSERT INTO users (username, email, phone_number, full_name, surname) VALUES ($1, $2, $3, $4, $5)"
+	return "INSERT INTO users (username, email, phone_number, full_name, surname, password_hash) VALUES ($1, $2, $3, $4, $5, $6)"
 }
 
 func UserSelectQuery() string {

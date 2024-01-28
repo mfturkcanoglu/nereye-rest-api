@@ -14,11 +14,12 @@ type CustomerRepository interface {
 }
 
 type CustomCustomerRepository struct {
-	logger *log.Logger
-	db     *sql.DB
+	logger         *log.Logger
+	db             *sql.DB
+	userRepository *CustomUserRepository
 }
 
-func NewCustomerRepository(logger *log.Logger, db *sql.DB) *CustomCustomerRepository {
+func NewCustomerRepository(logger *log.Logger, db *sql.DB, userRepository *CustomUserRepository) *CustomCustomerRepository {
 	repo := &CustomCustomerRepository{
 		logger: logger,
 		db:     db,
@@ -62,10 +63,14 @@ func (repo *CustomCustomerRepository) GetAll() ([]*model.CustomerGet, error) {
 func (repo *CustomCustomerRepository) CreateCustomer(customerCreate *model.CustomerCreate) error {
 	username := customerCreate.CreateRandomCustomerUsername()
 	var userId string
-	err := repo.db.QueryRow(
-		query.UserInsertQueryWithReturn(),
-		username, customerCreate.Email, customerCreate.PhoneNumber, customerCreate.FullName, customerCreate.Surname,
-	).Scan(&userId)
+	userId, err := repo.userRepository.CreateUser(&model.UserCreate{
+		Username:    username,
+		Email:       customerCreate.User.Email,
+		PhoneNumber: customerCreate.User.PhoneNumber,
+		FullName:    customerCreate.User.FullName,
+		Surname:     customerCreate.User.Surname,
+		Password:    customerCreate.User.Password,
+	})
 
 	if err != nil {
 		repo.logger.Println(

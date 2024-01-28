@@ -21,8 +21,8 @@ type CustomAuthHandler struct {
 	logger         *log.Logger
 }
 
-func NewCustomAuthHandler(logger *log.Logger, userRepository *repository.CustomUserRepository, router *server.CustomRouter) *CustomUserHandler {
-	handler := &CustomUserHandler{
+func NewCustomAuthHandler(logger *log.Logger, userRepository *repository.CustomUserRepository, router *server.CustomRouter) *CustomAuthHandler {
+	handler := &CustomAuthHandler{
 		logger:         logger,
 		userRepository: userRepository,
 	}
