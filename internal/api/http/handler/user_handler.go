@@ -12,7 +12,6 @@ import (
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/error_handler"
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/server"
 	"github.com/mfturkcan/nereye-rest-api/internal/service"
-	"github.com/mfturkcan/nereye-rest-api/pkg/model"
 	"github.com/mfturkcan/nereye-rest-api/pkg/repository"
 )
 
@@ -68,29 +67,9 @@ func (h *CustomUserHandler) GetAllUsers(w http.ResponseWriter, r *http.Request) 
 	_ = json.NewEncoder(w).Encode(&res)
 }
 
-func (h *CustomUserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
-	user := &model.UserCreate{}
-	err := json.NewDecoder(r.Body).Decode(&user)
-
-	if err != nil {
-		error_handler.HandleInvalidSchemaError(w, r, err, h.logger)
-		return
-	}
-
-	err = h.service.CreateUser(user)
-
-	if err != nil {
-		error_handler.HandleDataCannotHandledError(w, r, h.logger)
-		return
-	}
-
-	w.WriteHeader(http.StatusCreated)
-}
-
 func (h *CustomUserHandler) RegisterRoutes(router *server.CustomRouter) {
 	router.Router.Route("/api/v1/user", func(r chi.Router) {
 		r.Get("/all", h.GetAllUsers)
 		r.Get("/", h.GetUserInfo)
-		r.Post("/", h.CreateUser)
 	})
 }

@@ -53,8 +53,29 @@ func (h *CustomAuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(&tokens)
 }
 
+func (h *CustomAuthHandler) SignUp(w http.ResponseWriter, r *http.Request) {
+	user := &model.UserCreate{}
+	err := json.NewDecoder(r.Body).Decode(&user)
+
+	if err != nil {
+		error_handler.HandleInvalidSchemaError(w, r, err, h.logger)
+		return
+	}
+
+	res, err := h.authService.SignUp(user)
+
+	if err != nil {
+		error_handler.HandleDataCannotHandledError(w, r, h.logger)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	_ = json.NewEncoder(w).Encode(&res)
+}
+
 func (h *CustomAuthHandler) RegisterRoutes(router *server.CustomRouter) {
 	router.Router.Route("/auth", func(r chi.Router) {
 		r.Post("/sign-in", h.Login)
+		r.Post("/sign-up", h.SignUp)
 	})
 }

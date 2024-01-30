@@ -33,7 +33,7 @@ func main() {
 		productRepository         *repository.CustomProductRepository         = repository.NewProductRepository(logger, db)
 
 		tokenService *service.TokenService = service.NewTokenService(logger, "test top secret")
-		authService  *service.AuthService  = service.NewAuthService(logger, 14, userRepository, tokenService) // get it from config
+		authService  *service.AuthService  = service.NewAuthService(logger, 20, userRepository, tokenService) // get it from config
 		userService  *service.UserService  = service.NewUserService(logger, userRepository, authService)
 
 		_ *handler.CustomUserHandler       = handler.NewCustomUserHandler(logger, userRepository, router, userService)

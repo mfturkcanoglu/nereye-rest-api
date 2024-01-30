@@ -28,7 +28,7 @@ func NewAuthService(logger *log.Logger, salt int, userRepository *repository.Cus
 func (service *AuthService) GenerateHashPassword(password string) (string, error) {
 	salt := service.salt
 	if salt == 0 {
-		salt = 14
+		salt = 12
 	}
 
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), salt)
@@ -68,6 +68,42 @@ func (service *AuthService) Login(dto *model.UserLoginRequestDto) (*model.UserLo
 		return nil, err
 	}
 
+	return &model.UserLoginResponseDto{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
+}
+
+func (service *AuthService) SignUp(userCreate *model.UserCreate) (*model.UserLoginResponseDto, error) {
+	if userCreate.Password != userCreate.PasswordConfirm {
+		return nil, errors.New("passwords does not match")
+	}
+
+	hashedPass, err := service.GenerateHashPassword(userCreate.Password)
+
+	if err != nil {
+		return nil, errors.New("error during creating password")
+	}
+
+	userCreate.Password = hashedPass
+
+	userId, err := service.userRepository.CreateUser(userCreate)
+
+	if err != nil {
+		return nil, err
+	}
+
+	refreshToken, err := service.tokenService.CreateRefreshToken()
+
+	if err != nil {
+		return nil, err
+	}
+
+	accessToken, err := service.tokenService.CreateAccessToken(userId)
+
+	if err != nil {
+		return nil, err
+	}
 	return &model.UserLoginResponseDto{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
