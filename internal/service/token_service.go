@@ -1,18 +1,27 @@
 package service
 
 import (
+	"log"
 	"time"
 
 	"github.com/golang-jwt/jwt"
 )
 
 type TokenService struct {
+	logger      *log.Logger
 	TokenSecret string
 }
 
 type Claims struct {
 	UserId string `json:"user_id"`
 	jwt.StandardClaims
+}
+
+func NewTokenService(logger *log.Logger, tokenSecret string) *TokenService {
+	return &TokenService{
+		logger:      logger,
+		TokenSecret: tokenSecret,
+	}
 }
 
 func (service *TokenService) CreateAccessToken(userId string) (string, error) {

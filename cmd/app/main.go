@@ -32,15 +32,16 @@ func main() {
 		categoryRepository        *repository.CustomCategoryRepository        = repository.NewCategoryRepository(logger, db)
 		productRepository         *repository.CustomProductRepository         = repository.NewProductRepository(logger, db)
 
-		authService *service.AuthService = service.NewAuthService(logger, 14) // get it from config
-		userService *service.UserService = service.NewUserService(logger, userRepository, authService)
+		tokenService *service.TokenService = service.NewTokenService(logger, "test top secret")
+		authService  *service.AuthService  = service.NewAuthService(logger, 14, userRepository, tokenService) // get it from config
+		userService  *service.UserService  = service.NewUserService(logger, userRepository, authService)
 
 		_ *handler.CustomUserHandler       = handler.NewCustomUserHandler(logger, userRepository, router, userService)
 		_ *handler.CustomCustomerHandler   = handler.NewCustomCustomerHandler(logger, customerRepository, router)
 		_ *handler.CustomRestaurantHandler = handler.NewCustomRestaurantHandler(logger, restaurantRepository, restaurantPhotoRepository, router)
 		_ *handler.CustomCategoryHandler   = handler.NewCustomCategoryHandler(logger, categoryRepository, router)
 		_ *handler.CustomProductHandler    = handler.NewCustomProductHandler(logger, productRepository, router)
-		_ *handler.CustomAuthHandler       = handler.NewCustomAuthHandler(logger, userRepository, router)
+		_ *handler.CustomAuthHandler       = handler.NewCustomAuthHandler(logger, userRepository, router, authService)
 	)
 	defer store.Close()
 

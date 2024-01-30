@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/error_handler"
 	"github.com/mfturkcan/nereye-rest-api/internal/api/http/server"
+	"github.com/mfturkcan/nereye-rest-api/internal/service"
 	"github.com/mfturkcan/nereye-rest-api/pkg/model"
 	"github.com/mfturkcan/nereye-rest-api/pkg/repository"
 )
@@ -19,12 +20,14 @@ type AuthHandler interface {
 type CustomAuthHandler struct {
 	userRepository *repository.CustomUserRepository
 	logger         *log.Logger
+	authService    *service.AuthService
 }
 
-func NewCustomAuthHandler(logger *log.Logger, userRepository *repository.CustomUserRepository, router *server.CustomRouter) *CustomAuthHandler {
+func NewCustomAuthHandler(logger *log.Logger, userRepository *repository.CustomUserRepository, router *server.CustomRouter, authService *service.AuthService) *CustomAuthHandler {
 	handler := &CustomAuthHandler{
 		logger:         logger,
 		userRepository: userRepository,
+		authService:    authService,
 	}
 	handler.RegisterRoutes(router)
 	return handler
@@ -39,24 +42,19 @@ func (h *CustomAuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.userRepository.GetUserByUsernameAndPassword(dto.Username, dto.Password)
+	tokens, err := h.authService.Login(dto)
 
 	if err != nil {
 		error_handler.HandleDataCannotHandledError(w, r, h.logger)
 		return
 	}
 
-	res := &model.UserLoginResponseDto{
-		AccessToken:  user.Username,
-		RefreshToken: "dümenden refresh token",
-	}
-
 	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(&res)
+	_ = json.NewEncoder(w).Encode(&tokens)
 }
 
 func (h *CustomAuthHandler) RegisterRoutes(router *server.CustomRouter) {
 	router.Router.Route("/auth", func(r chi.Router) {
-		r.Get("/sign-in", h.Login)
+		r.Post("/sign-in", h.Login)
 	})
 }

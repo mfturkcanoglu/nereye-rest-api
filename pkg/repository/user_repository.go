@@ -32,7 +32,7 @@ func (repo *CustomUserRepository) CreateUser(userCreate *model.UserCreate) (stri
 	var id string
 
 	err := repo.db.QueryRow(
-		query.UserInsertQuery(),
+		query.UserInsertQueryWithReturn(),
 		userCreate.Username, userCreate.Email, userCreate.PhoneNumber, userCreate.FullName, userCreate.Surname, userCreate.Password,
 	).Scan(&id)
 
@@ -43,29 +43,31 @@ func (repo *CustomUserRepository) CreateUser(userCreate *model.UserCreate) (stri
 	return id, err
 }
 
-func (repo *CustomUserRepository) GetUserByUsernameAndPassword(username string, password string) (*model.UserGet, error) {
-	rows, err := repo.db.Query(query.UserGetByUsernameAndPasswordQuery(username, password))
+func (repo *CustomUserRepository) GetUserIdByUsername(username string) (*model.UserLoginQueryResult, error) {
+	rows, err := repo.db.Query(query.UserIdGetByUsernameQuery(username))
 
 	if err != nil {
 		errMsg := "User not found with credentials " + username
-		repo.logger.Println(errMsg)
+		repo.logger.Println(errMsg, err)
 		return nil, errors.New(errMsg)
 	}
 
-	user := &model.UserGet{}
-	err = rows.Scan(
-		&user.Username,
-		&user.PhoneNumber,
-		&user.Email,
-		&user.FullName,
-		&user.Surname)
+	var userLoginQueryResult model.UserLoginQueryResult
+	// err = rows.Scan(&userLoginQueryResult.UserId, &userLoginQueryResult.PasswordHash)
+
+	if rows.Next() {
+		err = rows.Scan(&userLoginQueryResult.UserId, &userLoginQueryResult.PasswordHash)
+		repo.logger.Println("err", err)
+	} else {
+		err = errors.New("result not found")
+	}
 
 	if err != nil {
 		repo.logger.Println(err)
 		return nil, err
 	}
 
-	return user, nil
+	return &userLoginQueryResult, nil
 }
 
 func (repo *CustomUserRepository) GetAll() ([]*model.UserGet, error) {

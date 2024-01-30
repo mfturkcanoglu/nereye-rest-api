@@ -46,6 +46,17 @@ func UserGetByUsernameAndPasswordQuery(username string, password string) string 
 		u.full_name,
 		u.surname
 		FROM users u
-		WHERE u.username = '%s' AND u.password = '%s'
+		WHERE u.username = '%s' AND u.password_hash = '%s'
 	`, username, password)
+}
+
+func UserIdGetByUsernameQuery(username string) string {
+	return fmt.Sprintf(
+		`
+		SELECT
+		u.id,
+		u.password_hash
+		FROM users u
+		WHERE u.username = '%s'
+	`, username)
 }

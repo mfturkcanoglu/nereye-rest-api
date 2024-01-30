@@ -35,6 +35,11 @@ type UserLoginRequestDto struct {
 	Password string `json:"password"`
 }
 
+type UserLoginQueryResult struct {
+	UserId       string
+	PasswordHash string
+}
+
 type UserLoginResponseDto struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
